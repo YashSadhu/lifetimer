@@ -1,0 +1,987 @@
+:root {
+    /* ChronoFlame - Life-inspired colors */
+    --cf-primary: #FF7043; /* Vibrant orange-red for energy and vitality */
+    --cf-secondary: #66BB6A; /* Green for growth and renewal */
+    --cf-accent: #FFD54F; /* Warm yellow for positivity */
+    --cf-background: #FAFAFA; /* Clean white background */
+    --cf-card: #FFFFFF; /* Pure white for cards */
+    --cf-text: #263238; /* Deep blue-gray for text */
+    --cf-text-secondary: #546E7A; /* Lighter blue-gray for secondary text */
+    --cf-border: #ECEFF1; /* Subtle border color */
+    --cf-highlight: #FF5722; /* Bright orange for highlights */
+    
+    /* Chronovisor - Keep existing colors */
+    --cv-primary: #4A6572; /* Deep blue-gray */
+    --cv-secondary: #344955; /* Darker blue-gray */
+    --cv-accent: #F9AA33; /* Amber accent */
+    --cv-background: #232F34; /* Very dark blue-gray background */
+    --cv-card: #344955; /* Dark blue-gray card background */
+    --cv-text: #ECEFF1; /* Light gray text */
+    --cv-text-secondary: #B0BEC5; /* Lighter gray for secondary text */
+    --cv-border: #37474F; /* Dark border */
+    --cv-highlight: #F9AA33; /* Amber highlight */
+    
+    /* Common variables */
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
+    --transition: all 0.3s ease;
+}
+
+/* Base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--cf-background);
+    color: var(--cf-text);
+    min-height: 100vh;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* Dark theme */
+body[data-theme="dark"] {
+    background-color: var(--cv-background);
+    color: var(--cv-text);
+}
+
+/* Header styles */
+header {
+    display: flex;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--cf-card);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+body[data-theme="dark"] header {
+    background-color: var(--cv-card);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.logo svg {
+    stroke: var(--cf-primary);
+    transition: var(--transition);
+}
+
+body[data-theme="dark"] .logo svg {
+    stroke: var(--cv-primary);
+}
+
+.spacer {
+    flex-grow: 1;
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--cf-text);
+    transition: var(--transition);
+}
+
+body[data-theme="dark"] .theme-toggle {
+    color: var(--cv-text);
+}
+
+/* Navigation styles */
+.timer-nav {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem 0;
+    gap: 0.5rem;
+}
+
+.nav-btn {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    background-color: var(--cf-card);
+    color: var(--cf-text);
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.nav-btn:hover {
+    background-color: var(--cf-primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.nav-btn.active {
+    background-color: var(--cf-primary);
+    color: white;
+}
+
+body[data-theme="dark"] .nav-btn {
+    background-color: var(--cv-card);
+    color: var(--cv-text);
+}
+
+body[data-theme="dark"] .nav-btn:hover {
+    background-color: var(--cv-primary);
+}
+
+body[data-theme="dark"] .nav-btn.active {
+    background-color: var(--cv-primary);
+}
+
+/* Main content styles */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.timer-view {
+    display: none;
+    width: 100%;
+    max-width: 800px;
+}
+
+.timer-view.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* View Titles and Intros */
+.view-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: var(--cf-primary);
+    transition: var(--transition);
+}
+
+body[data-theme="dark"] .view-title {
+    color: var(--cv-primary);
+}
+
+.view-intro {
+    font-size: 1rem;
+    color: var(--cf-text-secondary);
+    max-width: 600px;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    transition: var(--transition);
+}
+
+body[data-theme="dark"] .view-intro {
+    color: var(--cv-text-secondary);
+}
+
+/* ChronoFlame styles */
+.timer-options {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.timer-option {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: var(--cf-card);
+    color: var(--cf-text);
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.timer-option:hover {
+    background-color: var(--cf-secondary);
+    color: white;
+}
+
+.timer-option.active {
+    background-color: var(--cf-secondary);
+    color: white;
+}
+
+body[data-theme="dark"] .timer-option {
+    background-color: var(--cv-card);
+    color: var(--cv-text);
+}
+
+body[data-theme="dark"] .timer-option:hover {
+    background-color: var(--cv-secondary);
+}
+
+body[data-theme="dark"] .timer-option.active {
+    background-color: var(--cv-secondary);
+}
+
+.progress-container {
+    position: relative;
+    width: 350px;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.progress-ring {
+    transform: rotate(-90deg);
+    overflow: visible;
+}
+
+.progress-ring-circle {
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+body[data-theme="dark"] .progress-ring-circle {
+    stroke: var(--cv-accent);
+}
+
+.time-display {
+    position: absolute;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--cf-text);
+    transition: var(--transition);
+}
+
+body[data-theme="dark"] .time-display {
+    color: var(--cv-text);
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--cf-card);
+    color: var(--cf-text);
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background-color: var(--cf-primary);
+    color: white;
+}
+
+body[data-theme="dark"] .btn {
+    background-color: var(--cv-card);
+    color: var(--cv-text);
+}
+
+body[data-theme="dark"] .btn-primary {
+    background-color: var(--cv-primary);
+    color: white;
+}
+
+/* Chronovisor styles */
+.chronovisor-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 2rem;
+}
+
+.input-card {
+    background-color: var(--cf-card);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    transition: var(--transition);
+}
+
+body[data-theme="dark"] .input-card {
+    background-color: var(--cv-card);
+}
+
+.input-card h2 {
+    color: var(--cf-text);
+    transition: var(--transition);
+}
+
+body[data-theme="dark"] .input-card h2 {
+    color: var(--cv-text);
+}
+
+.date-input {
+    padding: 0.75rem;
+    border: 1px solid var(--cf-border);
+    border-radius: var(--border-radius);
+    width: 100%;
+    font-size: 1rem;
+    background-color: var(--cf-background);
+    color: var(--cf-text);
+    transition: var(--transition);
+}
+
+body[data-theme="dark"] .date-input {
+    border-color: var(--cv-border);
+    background-color: var(--cv-background);
+    color: var(--cv-text);
+}
+
+.cta-button {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--cf-primary);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    width: 100%;
+}
+
+.cta-button:hover {
+    background-color: var(--cf-highlight);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+body[data-theme="dark"] .cta-button {
+    background-color: var(--cv-primary);
+}
+
+body[data-theme="dark"] .cta-button:hover {
+    background-color: var(--cv-highlight);
+}
+
+.grid-container {
+    display: none;
+    width: 100%;
+    background-color: var(--cf-card);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+body[data-theme="dark"] .grid-container {
+    background-color: var(--cv-card);
+}
+
+.life-grid {
+    display: grid;
+    grid-template-columns: repeat(52, 1fr);
+    gap: 2px;
+    width: 100%;
+}
+
+.week-cell {
+    aspect-ratio: 1;
+    background-color: var(--cf-background);
+    border-radius: 2px;
+    transition: var(--transition);
+}
+
+.week-cell.lived {
+    background-color: var(--cf-secondary);
+}
+
+body[data-theme="dark"] .week-cell {
+    background-color: var(--cv-background);
+}
+
+body[data-theme="dark"] .week-cell.lived {
+    background-color: var(--cv-accent);
+}
+
+.stats-card {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 1.5rem;
+    background-color: var(--cf-card);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    width: 100%;
+    margin-top: 2rem;
+    transition: var(--transition);
+}
+
+body[data-theme="dark"] .stats-card {
+    background-color: var(--cv-card);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--cf-primary);
+    transition: var(--transition);
+}
+
+body[data-theme="dark"] .stat-number {
+    color: var(--cv-accent);
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--cf-text-secondary);
+    transition: var(--transition);
+}
+
+body[data-theme="dark"] .stat-label {
+    color: var(--cv-text-secondary);
+}
+
+/* === ID Card Styles (Inspired by id_combined.html) === */
+.id-card-container {
+    margin-top: 3rem;
+    width: 100%;
+    max-width: 400px;
+    padding-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    width: 280px;
+    height: 280px;
+    background: #f9f0f7;
+    border-radius: 32px;
+    padding: 3px;
+    position: relative;
+    box-shadow: #604b4a30 0px 70px 30px -50px;
+    transition: all 0.5s ease-in-out;
+}
+
+body[data-theme="dark"] .card {
+    background: var(--cv-card);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+.profile-pic {
+    position: absolute;
+    width: calc(100% - 6px);
+    height: calc(100% - 6px);
+    top: 3px;
+    left: 3px;
+    border-radius: 29px;
+    z-index: 1;
+    border: 0px solid #fbb9b6;
+    overflow: hidden;
+    transition: all 0.5s ease-in-out 0.2s, z-index 0.5s ease-in-out 0.2s;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    transition: all 0.5s ease-in-out 0s;
+}
+
+.bottom {
+    position: absolute;
+    bottom: 3px;
+    left: 3px;
+    right: 3px;
+    background: #fbb9b6;
+    top: 80%;
+    border-radius: 29px;
+    z-index: 2;
+    box-shadow: rgba(96, 75, 74, 0.188) 0px 5px 5px 0px inset;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) 0s;
+}
+
+body[data-theme="dark"] .bottom {
+    background: var(--cv-secondary);
+}
+
+.content {
+    position: absolute;
+    bottom: 0;
+    left: 1.5rem;
+    right: 1.5rem;
+    height: 160px;
+}
+
+.name {
+    font-size: 1.2rem;
+    color: white;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.about-me {
+    font-size: 0.875rem;
+    color: white;
+    line-height: 1.4;
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+body[data-theme="dark"] .about-me {
+    color: var(--cv-text);
+}
+
+.email {
+    color: white;
+    font-weight: normal;
+}
+
+body[data-theme="dark"] .email {
+    color: var(--cv-text-secondary);
+}
+
+.bottom-bottom {
+    position: absolute;
+    bottom: 1rem;
+    left: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.social-links-container {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-links-container svg {
+    width: 20px;
+    height: 20px;
+    fill: white;
+    filter: drop-shadow(0 5px 5px rgba(165, 132, 130, 0.133));
+    transition: all 0.3s ease;
+}
+
+.social-links-container svg:hover {
+    fill: #f55d56;
+    transform: translateY(-2px);
+}
+
+body[data-theme="dark"] .social-links-container svg {
+    fill: var(--cv-text);
+}
+
+body[data-theme="dark"] .social-links-container svg:hover {
+    fill: var(--cv-accent);
+}
+
+.button {
+    background: white;
+    color: #fbb9b6;
+    border: none;
+    border-radius: 20px;
+    font-size: 0.6rem;
+    padding: 0.4rem 0.6rem;
+    box-shadow: rgba(165, 132, 130, 0.133) 0px 5px 5px 0px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.button:hover {
+    background: #f55d56;
+    color: white;
+    transform: translateY(-2px);
+}
+
+body[data-theme="dark"] .button {
+    background-color: var(--cv-primary);
+    color: var(--cv-text);
+}
+
+body[data-theme="dark"] .button:hover {
+    background-color: var(--cv-highlight);
+}
+
+/* ID Card Hover Animations */
+.card:hover {
+    border-top-left-radius: 55px;
+}
+
+.card:hover .bottom {
+    top: 20%;
+    border-radius: 80px 29px 29px 29px;
+    transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
+}
+
+.card:hover .profile-pic {
+    width: 100px;
+    height: 100px;
+    aspect-ratio: 1;
+    top: 10px;
+    left: 10px;
+    border-radius: 50%;
+    z-index: 3;
+    border: 7px solid #fbb9b6;
+    box-shadow: rgba(96, 75, 74, 0.188) 0px 5px 5px 0px;
+    transition: all 0.5s ease-in-out, z-index 0.5s ease-in-out 0.1s;
+}
+
+body[data-theme="dark"] .card:hover .profile-pic {
+    border-color: var(--cv-primary);
+}
+
+.card:hover .profile-pic:hover {
+    transform: scale(1.3);
+    border-radius: 0px;
+}
+
+.card:hover .profile-pic img {
+    transform: scale(1.5);
+    transition: all 0.5s ease-in-out 0.5s;
+}
+
+body[data-theme="dark"] .card:hover .profile-pic img {
+    transform: scale(1.5);
+    transition: all 0.5s ease-in-out 0.5s;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .progress-container {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .time-display {
+        font-size: 2.5rem;
+    }
+    
+    .controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .timer-options {
+        gap: 0.5rem;
+    }
+    
+    .life-grid {
+        grid-template-columns: repeat(26, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .logo span {
+        display: none;
+    }
+    
+    .timer-options {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    
+    .timer-option {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .progress-container {
+        width: 240px;
+        height: 240px;
+    }
+    
+    .time-display {
+        font-size: 2rem;
+    }
+    
+    .controls {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .life-grid {
+        grid-template-columns: repeat(13, 1fr);
+    }
+}
+
+/* Apply deepseek colors specifically to MortalMap/Chronovisor */
+#chronovisor {
+    /* Colors from deepseek.html */
+    --mortal-primary: #6366f1; /* Indigo */
+    --mortal-secondary: #14b8a6; /* Teal */
+    --mortal-accent: #f59e0b; /* Amber */
+    --mortal-grid-line: #334155; /* Dark grid line from dark-mode */
+    --mortal-text: #f8fafc; /* Light text from dark-mode */
+    --mortal-text-secondary: #94a3b8; /* Lighter gray for secondary */
+    --mortal-background: #0f172a; /* Dark background from dark-mode */
+    --mortal-card: #1e293b; /* Slightly lighter dark for cards */
+}
+
+#chronovisor .input-card,
+#chronovisor .grid-container,
+#chronovisor .stats-card {
+    background-color: var(--mortal-card);
+}
+
+#chronovisor .view-title,
+#chronovisor .date-input,
+#chronovisor .stat-label,
+#chronovisor .modal {
+    color: var(--mortal-text);
+}
+
+#chronovisor .view-intro,
+#chronovisor .stat-label {
+    color: var(--mortal-text-secondary);
+}
+
+#chronovisor .date-input {
+    border-color: var(--mortal-primary);
+    background-color: var(--mortal-background);
+}
+
+#chronovisor .cta-button {
+    background: linear-gradient(45deg, var(--mortal-primary), var(--mortal-secondary));
+    color: white;
+}
+
+#chronovisor .cta-button:hover {
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+}
+
+#chronovisor .week-cell {
+    background-color: var(--mortal-grid-line);
+    transition: transform 0.2s ease, background-color 0.3s ease; /* Added transform transition */
+    cursor: pointer; /* Ensure cursor indicates clickability */
+}
+
+#chronovisor .week-cell.lived {
+    background: linear-gradient(45deg, var(--mortal-primary), var(--mortal-secondary));
+}
+
+/* Gradient override for partially lived cell */
+#chronovisor .week-cell.partially-lived {
+    /* Gradient is applied via JS */
+}
+
+body[data-theme="dark"] #chronovisor .week-cell.lived {
+    background: linear-gradient(45deg, var(--mortal-primary), var(--mortal-secondary)); /* Keep gradient consistent */
+}
+
+/* Zoom effect from deepseek.html */
+#chronovisor .week-cell:hover {
+    transform: scale(1.5);
+    z-index: 10; /* Ensure hovered cell is on top */
+}
+
+#chronovisor .week-cell.has-note {
+    /* Add a subtle indicator for cells with notes */
+    position: relative; 
+}
+
+#chronovisor .week-cell.has-note::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 4px;
+    height: 4px;
+    background-color: var(--mortal-accent); /* Use accent color for the dot */
+    border-radius: 50%;
+}
+
+#chronovisor .stat-number {
+    background: linear-gradient(45deg, var(--mortal-primary), var(--mortal-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* === Modal Styles === */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--mortal-card); /* Use MortalMap card color */
+    color: var(--mortal-text);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    z-index: 1001;
+    display: none; /* Hidden by default */
+    width: 90%;
+    max-width: 450px;
+    border: 1px solid var(--mortal-grid-line);
+}
+
+.modal.active {
+    display: block;
+}
+
+.modal h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: var(--mortal-accent);
+}
+
+.modal textarea {
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--mortal-grid-line);
+    background-color: var(--mortal-background);
+    color: var(--mortal-text);
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+#modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    display: none; /* Hidden by default */
+}
+
+#modalBackdrop.active {
+    display: block;
+}
+
+/* Fix for Play with Colors Game - Help and Restart buttons */
+.play-with-colors .help-button,
+.play-with-colors .restart-button {
+    position: absolute;
+    top: 10px;
+    z-index: 100;
+}
+
+.play-with-colors .help-button {
+    right: 60px; /* Position help button on the right side */
+}
+
+.play-with-colors .restart-button {
+    right: 10px; /* Position restart button on the right side */
+}
+
+/* Ensure level number and name have proper spacing */
+.play-with-colors .level-info {
+    margin-top: 10px;
+    margin-right: 120px; /* Add space on the right to avoid button overlap */
+    text-align: left;
+}
+
+/* Fix for FlowState Game - Help and Restart buttons */
+#chronoflame .help-button,
+#chronoflame .restart-button,
+#chronoflame .timer-link-button,
+.flow-state .help-button,
+.flow-state .restart-button,
+.flow-state .timer-link-button {
+    position: absolute;
+    top: 10px;
+    z-index: 100;
+}
+
+#chronoflame .help-button,
+.flow-state .help-button {
+    right: 110px; /* Moved further to make room for timer button */
+}
+
+#chronoflame .restart-button,
+.flow-state .restart-button {
+    right: 60px; /* Moved to middle position */
+}
+
+#chronoflame .timer-link-button,
+.flow-state .timer-link-button {
+    right: 10px; /* New timer button on far right */
+    background-color: var(--cf-primary); /* Use theme primary color */
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+#chronoflame .timer-link-button:hover,
+.flow-state .timer-link-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+body[data-theme="dark"] #chronoflame .timer-link-button,
+body[data-theme="dark"] .flow-state .timer-link-button {
+    background-color: var(--cv-primary);
+}
+
+/* Ensure level number and name have proper spacing in FlowState */
+#chronoflame .level-info,
+.flow-state .level-info {
+    margin-top: 10px;
+    margin-right: 170px; /* Increased space for 3 buttons now */
+    text-align: left;
+} 

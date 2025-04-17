@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChronoFlame - Premium Time Manager</title>
+    <style>
+        :root {
+            --primary: #FF4444;    /* Vibrant red */
+            --secondary: #FF6B6B;  /* Soft coral */
+            --accent: #FFD700;     /* Gold accent */
+            --background: #1a1a1a;
+            --surface: #2d2d2d;
+            --text: #f5f5f5;
+            --text-secondary: #b3b3b3;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --error: #F44336;
+            --deep-shadow: 0 4px 6px rgba(0,0,0,0.3), 0 10px 20px rgba(0,0,0,0.2);
+            --neumorphic: 8px 8px 16px rgba(0,0,0,0.2), -8px -8px 16px rgba(255,255,255,0.05);
+        }
+
+        [data-theme="light"] {
+            --primary: #FF4444;
+            --secondary: #FF6B6B;
+            --accent: #FFD700;
+            --background: #f8f8f8;
+            --surface: #ffffff;
+            --text: #2d2d2d;
+            --text-secondary: #757575;
+            --deep-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 10px 20px rgba(0,0,0,0.08);
+            --neumorphic: 8px 8px 16px rgba(0,0,0,0.1), -8px -8px 16px rgba(255,255,255,0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, sans-serif;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Progress Ring */
+        .progress-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 2rem auto;
+        }
+
+        .progress-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            filter: drop-shadow(0 0 20px rgba(255, 68, 68, 0.3));
+        }
+
+        .progress-ring circle {
+            transition: stroke-dashoffset 0.5s linear;
+        }
+
+        /* Enhanced Header */
+        header {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface);
+            box-shadow: var(--deep-shadow);
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.75rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .theme-toggle {
+            background: var(--surface);
+            color: var(--text);
+            border: none;
+            width: 40px;
+            height: 40px;
+            font-size: 1.25rem;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: var(--neumorphic);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* New Time Display Design */
+        .time-display {
+            font-size: 4.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+            text-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+            z-index: 2;
+        }
+
+        .time-display::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Advanced Control Buttons */
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 140px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--neumorphic);
+            transition: all 0.3s ease;
+            background-color: var(--surface);
+            color: var(--text);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, 
+                rgba(255,255,255,0.1), 
+                rgba(255,255,255,0.05));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn:hover::before {
+            opacity: 1;
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: var(--deep-shadow);
+        }
+
+        /* New Lap Visualization */
+        .time-analytics {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 2rem;
+        }
+
+        .lap-visualization {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            height: 40px;
+        }
+
+        .lap-bar {
+            flex: 1;
+            background: var(--surface);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lap-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            width: var(--progress);
+        }
+
+        /* Lap records */
+        .lap-records {
+            margin-top: 2rem;
+            width: 100%;
+            max-width: 600px;
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: var(--neumorphic);
+        }
+
+        .lap-records h3 {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .lap-list {
+            list-style-type: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .lap-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .lap-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Enhanced Notification System */
+        .notification {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1.25rem;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: var(--deep-shadow);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transform: translateX(150%);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 100;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+        }
+
+        /* Add these new animations */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Add media queries for responsiveness */
+        @media (max-width: 768px) {
+            .progress-container {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .progress-ring {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .time-display {
+                font-size: 3.5rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 6v6l4 2m6-2a10 10 0 1 1-20 0 10 10 0 0 1 20 0z"/>
+            </svg>
+            ChronoFlame
+        </div>
+        <button class="theme-toggle" id="themeToggle">🌓</button>
+    </header>
+
+    <main class="main-content">
+        <div class="progress-container">
+            <svg class="progress-ring" width="400" height="400">
+                <circle stroke="var(--surface)" stroke-width="8" fill="transparent" r="190" cx="200" cy="200"/>
+                <circle class="progress-circle" stroke="var(--primary)" stroke-width="8" fill="transparent" r="190" cx="200" cy="200"
+                        stroke-dasharray="1194" stroke-dashoffset="1194"/>
+            </svg>
+            
+            <div class="time-display" id="timeDisplay">00:00:00</div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-primary" id="startStopBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                Start
+            </button>
+            
+            <button class="btn" id="resetBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 4v6h6"></path>
+                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                </svg>
+                Reset
+            </button>
+            
+            <button class="btn" id="lapBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                Lap
+            </button>
+        </div>
+
+        <div class="time-analytics">
+            <div class="lap-visualization">
+                <div class="lap-bar">
+                    <div class="lap-progress" style="--progress: 75%"></div>
+                </div>
+                <div class="lap-bar">
+                    <div class="lap-progress" style="--progress: 45%"></div>
+                </div>
+                <div class="lap-bar">
+                    <div class="lap-progress" style="--progress: 90%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lap-records">
+            <h3>Lap Records</h3>
+            <ul class="lap-list" id="lapList">
+                <!-- Lap records will be added here dynamically -->
+            </ul>
+        </div>
+    </main>
+
+    <div class="notification" id="notification">
+        <div class="notification-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+        </div>
+        <span id="notificationMessage">Timer Completed!</span>
+    </div>
+
+    <script>
+        // DOM Elements
+        const progressCircle = document.querySelector('.progress-circle');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const startStopBtn = document.getElementById('startStopBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const lapBtn = document.getElementById('lapBtn');
+        const lapList = document.getElementById('lapList');
+        const themeToggle = document.getElementById('themeToggle');
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notificationMessage');
+
+        // Timer Variables
+        let startTime = 0;
+        let elapsedTime = 0;
+        let timerInterval = null;
+        let isRunning = false;
+        let laps = [];
+        let lastLapTime = 0;
+
+        // Progress Ring Setup
+        const radius = progressCircle.r.baseVal.value;
+        const circumference = radius * 2 * Math.PI;
+        progressCircle.style.strokeDasharray = `${circumference}`;
+        progressCircle.style.strokeDashoffset = circumference;
+
+        // Set progress function (0-100%)
+        function setProgress(percent) {
+            const offset = circumference - (percent / 100) * circumference;
+            progressCircle.style.strokeDashoffset = offset;
+        }
+
+        // Format time function (milliseconds to 00:00:00 format)
+        function formatTime(timeInMs) {
+            const ms = Math.floor((timeInMs % 1000) / 10);
+            const seconds = Math.floor((timeInMs / 1000) % 60);
+            const minutes = Math.floor((timeInMs / (1000 * 60)) % 60);
+            const hours = Math.floor(timeInMs / (1000 * 60 * 60));
+
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')}`;
+        }
+
+        // Start/Stop timer
+        function toggleTimer() {
+            if (isRunning) {
+                // Stop the timer
+                clearInterval(timerInterval);
+                isRunning = false;
+                startStopBtn.innerHTML = `
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    Start
+                `;
+            } else {
+                // Start the timer
+                if (elapsedTime === 0) {
+                    startTime = Date.now();
+                } else {
+                    // Resume from pause
+                    startTime = Date.now() - elapsedTime;
+                }
+
+                timerInterval = setInterval(updateTimer, 10); // Update every 10ms for smooth display
+                isRunning = true;
+                startStopBtn.innerHTML = `
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="6" y="4" width="4" height="16"></rect>
+                        <rect x="14" y="4" width="4" height="16"></rect>
+                    </svg>
+                    Pause
+                `;
+            }
+            
+            // Add haptic feedback
+            vibrate();
+        }
+
+        // Update timer function
+        function updateTimer() {
+            elapsedTime = Date.now() - startTime;
+            timeDisplay.textContent = formatTime(elapsedTime);
+            
+            // Update progress ring (cycles every minute)
+            const seconds = (elapsedTime / 1000) % 60;
+            const progress = (seconds / 60) * 100;
+            setProgress(progress);
+        }
+
+        // Reset timer
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            elapsedTime = 0;
+            lastLapTime = 0;
+            laps = [];
+            timeDisplay.textContent = formatTime(0);
+            setProgress(0);
+            lapList.innerHTML = '';
+            startStopBtn.innerHTML = `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                Start
+            `;
+            
+            // Vibrate and notify
+            vibrate([50, 100, 50]);
+            showNotification("Timer Reset");
+        }
+
+        // Record lap
+        function recordLap() {
+            if (!isRunning) return;
+            
+            const lapTime = elapsedTime - lastLapTime;
+            lastLapTime = elapsedTime;
+            laps.push(lapTime);
+            
+            // Create lap list item
+            const li = document.createElement('li');
+            li.className = 'lap-item';
+            li.innerHTML = `
+                <span>Lap ${laps.length}</span>
+                <span>${formatTime(lapTime)}</span>
+            `;
+            
+            // Add to the beginning of the list for newest at top
+            lapList.insertBefore(li, lapList.firstChild);
+            
+            // Update lap visualization (simplified)
+            updateLapVisualization();
+            
+            // Add haptic feedback
+            vibrate([30]);
+        }
+
+        // Update lap visualization
+        function updateLapVisualization() {
+            const lapBars = document.querySelectorAll('.lap-bar');
+            const maxLapTime = Math.max(...laps);
+            
+            // Only update the most recent 3 laps
+            const recentLaps = laps.slice(-3);
+            
+            lapBars.forEach((bar, index) => {
+                if (index < recentLaps.length) {
+                    const progress = (recentLaps[index] / maxLapTime) * 100;
+                    const progressElement = bar.querySelector('.lap-progress');
+                    progressElement.style.setProperty('--progress', `${progress}%`);
+                }
+            });
+        }
+
+        // Show notification
+        function showNotification(message) {
+            notificationMessage.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Add sound notifications
+        const playSound = (type) => {
+            const audio = new Audio(`data:audio/mp3;base64,//uQRAAAAWMSLwUIYAAsYkXgoQwAEaYLWfkWgAI0wWs/ItAAAGDgYtAgAyN+QWaAAihwMWm4G8QQRDiMcCBcH3Cc+CDv/7xA4Tvh9Rz/y8QADBwMWgQAZG/ILNAARQ4GLTcDeIIIhxGOBAuD7hOfBB3/94gcJ3w+o5/5eIAIAAAVwWgQAVQ2ORaIQwEMAJiDg95G4nQL7mQVWI6GwRcfsZAcsKkJvxgxEjzFUgfHoSQ9Qq7KNwqHwuB13MA4a1q/DmBrHgPcmjiGoh//EwC5nGPEmS4RcfkVKOhJf+WOgoxJclFAA3ju2lBzHE9ACLAP++wAAAA==`);
+            audio.volume = 0.3;
+            audio.play();
+        }
+
+        // Add haptic feedback
+        const vibrate = (pattern = [50]) => {
+            if ("vibrate" in navigator) navigator.vibrate(pattern);
+        }
+
+        // Toggle theme
+        function toggleTheme() {
+            const currentTheme = document.body.getAttribute('data-theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Add haptic feedback
+            vibrate([20]);
+        }
+
+        // Add event listeners
+        startStopBtn.addEventListener('click', toggleTimer);
+        resetBtn.addEventListener('click', resetTimer);
+        lapBtn.addEventListener('click', recordLap);
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                toggleTimer();
+                e.preventDefault(); // Prevent scrolling
+            }
+            if (e.code === 'KeyL') {
+                recordLap();
+            }
+            if (e.code === 'KeyR') {
+                resetTimer();
+            }
+        });
+
+        // Initialize theme from localStorage
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
+        }
+
+        // Initialize
+        initTheme();
+        setProgress(0);
+    </script>
+</body>
+</html>
